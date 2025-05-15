@@ -55,7 +55,7 @@ function App() {
         </div>
       </form>
       <p className="mt-5">
-        Thanks for subscribing!❤️ <br />
+        Thanks for subscribing! ❤️ <br />
         Please check your email to confirm your subscription.
       </p>
     </div>
