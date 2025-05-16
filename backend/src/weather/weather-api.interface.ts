@@ -4,6 +4,8 @@ export type WeatherForecast = {
   temperature: number;
 };
 
+export const WEATHER_API_TOKEN = Symbol('IWeatherApi');
+
 export interface IWeatherApi {
   getCurrentForecastForCity(city: string): Promise<WeatherForecast>;
 }
