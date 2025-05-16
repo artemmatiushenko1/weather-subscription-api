@@ -8,7 +8,6 @@ export class WeatherController {
 
   @Get('/')
   async getCurrentWeather(@Query() query: GetCurrentWeatherDto) {
-    console.log(query);
     return this.weatherService.getCurrentWeather(query.city);
   }
 }

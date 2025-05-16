@@ -7,3 +7,7 @@ export type WeatherApiCurrentResponse = {
     };
   };
 };
+
+export type WeatherApiCurrentErrorResponse = {
+  error: { code: number; message: string };
+};

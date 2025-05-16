@@ -1,5 +1,10 @@
 import { IWeatherApi, WeatherForecast } from '../weather-api.interface';
-import { WeatherApiCurrentResponse } from './types';
+import { CityNotFoundException } from './city-not-found.exception';
+import {
+  WeatherApiCurrentErrorResponse,
+  WeatherApiCurrentResponse,
+} from './types';
+import { WeatherApiException } from './weather-api.exception';
 
 const BASE_API_URL = 'http://api.weatherapi.com';
 
@@ -14,12 +19,19 @@ class WeatherApiImpl implements IWeatherApi {
     url.searchParams.append('q', city);
     url.searchParams.append('aqi', 'no');
 
-    // TODO: inject http client
+    // TODO: use HttpService from nest
     const response = await fetch(url);
-    console.log(url);
-    // if (!response.ok) {
-    //   throw new Error('Failed to fetch weather data');
-    // }
+
+    if (!response.ok) {
+      const data =
+        (await response.json()) as unknown as WeatherApiCurrentErrorResponse;
+
+      if (data.error.code === CityNotFoundException.CODE) {
+        throw new CityNotFoundException(city);
+      } else {
+        throw new WeatherApiException(data.error.message);
+      }
+    }
 
     // TODO: use json validation schema
     const data =
