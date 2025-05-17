@@ -1,4 +1,4 @@
-import { WEATHER_API_TOKEN } from './weather-api.interface';
+import { WEATHER_API_TOKEN } from './interfaces/weather-api.interface';
 import { Module } from '@nestjs/common';
 import { WeatherController } from './weather.controller';
 import { WeatherService } from './weather.service';
