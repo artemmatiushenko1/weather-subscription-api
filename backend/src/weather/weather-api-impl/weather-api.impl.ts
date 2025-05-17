@@ -1,4 +1,3 @@
-import { firstValueFrom } from 'rxjs';
 import { IWeatherApi, WeatherForecast } from '../weather-api.interface';
 import { CityNotFoundException } from './city-not-found.exception';
 import {
