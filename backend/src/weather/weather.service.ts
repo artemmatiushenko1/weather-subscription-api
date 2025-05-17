@@ -18,7 +18,7 @@ export class WeatherService {
       const weather = new Weather();
       weather.description = weatherApiResponse.description;
       weather.humidity = weatherApiResponse.humidity;
-      weather.temperature = weatherApiResponse.humidity;
+      weather.temperature = weatherApiResponse.temperature;
 
       return weather;
     } catch (e: unknown) {
