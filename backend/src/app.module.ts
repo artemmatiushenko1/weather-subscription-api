@@ -4,6 +4,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WeatherSchedulerModule } from './weather-scheduler/weather-scheduler.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [__dirname + './**/*.entity.{js,ts}'],
       autoLoadEntities: true,
     }),
+    WeatherSchedulerModule,
   ],
 })
 export class AppModule {}

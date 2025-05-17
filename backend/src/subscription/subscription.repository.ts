@@ -4,6 +4,7 @@ import { ISubscriptionRepository } from './interfaces/subscription-repository.in
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { Frequency } from './domain/frequency';
 
 @Injectable()
 class SubscriptionRepository implements ISubscriptionRepository {
@@ -59,6 +60,14 @@ class SubscriptionRepository implements ISubscriptionRepository {
   delete = async (subscriptionId: string): Promise<boolean> => {
     const result = await this.subscriptionRepository.delete(subscriptionId);
     return !!result.affected;
+  };
+
+  getAllByFrequency = async (frequency: Frequency): Promise<Subscription[]> => {
+    const entities = await this.subscriptionRepository.find({
+      where: { frequency, confirmed: true },
+    });
+
+    return entities.map((entity) => this.toDomain(entity));
   };
 }
 

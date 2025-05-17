@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { Weather } from 'src/weather/domain/weather';
 
 @Injectable()
 export class EmailService {
@@ -28,9 +29,7 @@ export class EmailService {
     recipientEmail: string,
     frequency: string,
     city: string,
-    humidity: string,
-    temperature: string,
-    description: string,
+    weather: Weather,
     unsubscribeLink: string,
   ) {
     await this.mailerService.sendMail({
@@ -41,9 +40,9 @@ export class EmailService {
         unsubscribeLink,
         frequency,
         city,
-        humidity,
-        temperature,
-        description,
+        humidity: weather.humidity,
+        temperature: weather.temperature,
+        description: weather.description,
       },
     });
   }

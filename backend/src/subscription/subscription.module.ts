@@ -27,5 +27,6 @@ import { EmailModule } from 'src/email/email.module';
     },
   ],
   controllers: [SubscriptionController],
+  exports: [SubscriptionService],
 })
 export class SubscriptionModule {}

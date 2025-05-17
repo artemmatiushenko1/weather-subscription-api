@@ -5,6 +5,9 @@ export const SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN = Symbol(
 );
 interface ISubscriptionTokenRepository {
   find: (token: string) => Promise<SubscriptionToken | null>;
+  findUnsubscribeToken: (
+    subscriptionId: string,
+  ) => Promise<SubscriptionToken | null>;
   create: (
     subscriptionId: string,
     subscriptionToken: SubscriptionToken,

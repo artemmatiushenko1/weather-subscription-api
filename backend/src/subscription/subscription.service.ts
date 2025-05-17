@@ -134,4 +134,27 @@ export class SubscriptionService {
     await this.subscriptionTokenRepository.delete(validatedToken.id);
     await this.subscriptionRepository.delete(validatedToken.subscriptionId);
   }
+
+  async getSubscriptionsByFrequency(
+    frequency: Frequency,
+  ): Promise<Subscription[]> {
+    return this.subscriptionRepository.getAllByFrequency(frequency);
+  }
+
+  async getUnsubscribeToken(
+    subscriptionId: string,
+  ): Promise<SubscriptionToken> {
+    const token =
+      await this.subscriptionTokenRepository.findUnsubscribeToken(
+        subscriptionId,
+      );
+
+    if (!token) {
+      throw new NotFoundException(
+        `Unsubscribe token was not found for subscription ${subscriptionId}`,
+      );
+    }
+
+    return token;
+  }
 }

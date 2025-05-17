@@ -5,6 +5,7 @@ import { SubscriptionTokenEntity } from './entities/subscription-token.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionEntity } from './entities/subscription.entity';
+import { SubscriptionTokenScope } from './domain/subscription-token-scope';
 
 @Injectable()
 class SubscriptionTokenRepository implements ISubscriptionTokenRepository {
@@ -66,6 +67,24 @@ class SubscriptionTokenRepository implements ISubscriptionTokenRepository {
   delete = async (tokenId: string) => {
     const result = await this.subscriptionTokenRepository.delete(tokenId);
     return !!result.affected;
+  };
+
+  findUnsubscribeToken = async (
+    subscriptionId: string,
+  ): Promise<SubscriptionToken | null> => {
+    const entity = await this.subscriptionTokenRepository.findOne({
+      where: {
+        subscription: { id: subscriptionId },
+        scope: SubscriptionTokenScope.UNSUBSCRIBE,
+      },
+      relations: ['subscription'],
+    });
+
+    if (!entity) {
+      return null;
+    }
+
+    return this.toDomain(entity);
   };
 }
 
