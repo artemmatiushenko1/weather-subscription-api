@@ -10,8 +10,8 @@ class SubscriptionTokenEntity {
   @Column({ unique: true })
   token: string;
 
-  @Column()
-  expiresAt: Date;
+  @Column({ nullable: true, type: Date })
+  expiresAt: Date | null;
 
   @Column({ type: 'enum', enum: SubscriptionTokenScope })
   scope: SubscriptionTokenScope;
