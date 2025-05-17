@@ -3,7 +3,7 @@ import {
   IWeatherApi,
   WEATHER_API_TOKEN,
 } from './interfaces/weather-api.interface';
-import { CityNotFoundException } from './weather-api-impl/city-not-found.exception';
+import { CityNotFoundException } from './weather-api-impl/exceptions/city-not-found.exception';
 import { Weather } from './domain/weather';
 
 @Injectable()
