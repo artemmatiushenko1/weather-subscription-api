@@ -13,6 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     EmailModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
+      // TODO: use config service
       host: process.env.POSTGRES_HOST as unknown as string,
       port: process.env.POSTGRES_PORT as unknown as number,
       username: process.env.POSTGRES_USER as unknown as string,
