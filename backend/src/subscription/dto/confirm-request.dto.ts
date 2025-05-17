@@ -1,0 +1,3 @@
+class ConfirmRequestDto {}
+
+export { ConfirmRequestDto };
