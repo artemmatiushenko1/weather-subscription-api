@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { IWeatherApi, WeatherForecast } from '../weather-api.interface';
 import { CityNotFoundException } from './city-not-found.exception';
 import {
@@ -5,11 +6,15 @@ import {
   WeatherApiCurrentResponse,
 } from './types';
 import { WeatherApiException } from './weather-api.exception';
+import { HttpService } from '@nestjs/axios';
 
 const BASE_API_URL = 'http://api.weatherapi.com';
 
 class WeatherApiImpl implements IWeatherApi {
-  constructor(private apiKey: string) {}
+  constructor(
+    private apiKey: string,
+    private httpService: HttpService,
+  ) {}
 
   getCurrentForecastForCity = async (
     city: string,
