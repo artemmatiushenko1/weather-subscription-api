@@ -20,4 +20,9 @@ export class SubscriptionController {
   async confirm(@Param() request: ConfirmRequestDto) {
     return await this.subscriptionService.confirm(request.token);
   }
+
+  @Get('unsubscribe/:token')
+  async unsubscribe(@Param() request: ConfirmRequestDto) {
+    return await this.subscriptionService.unsubscribe(request.token);
+  }
 }

@@ -67,7 +67,10 @@ export class SubscriptionService {
     console.log(`Please confirm you email. Token ${createdToken.token}`);
   }
 
-  async confirm(token: string) {
+  private async validateToken(
+    token: string,
+    expectedScope: SubscriptionTokenScope,
+  ): Promise<SubscriptionToken> {
     const foundToken = await this.subscriptionTokenRepository.find(token);
 
     if (!foundToken) {
@@ -76,12 +79,31 @@ export class SubscriptionService {
 
     const isTokenExpired = dayjs(foundToken.expiresAt).isBefore(dayjs());
 
-    if (foundToken.scope !== SubscriptionTokenScope.CONFIRM || isTokenExpired) {
+    if (foundToken.scope !== expectedScope || isTokenExpired) {
       throw new BadRequestException('Invalid token');
     }
 
+    return foundToken;
+  }
+
+  async confirm(token: string) {
+    const validatedToken = await this.validateToken(
+      token,
+      SubscriptionTokenScope.CONFIRM,
+    );
     // TODO: should a single transaction?
-    await this.subscriptionRepository.confirm(foundToken.subscriptionId);
-    await this.subscriptionTokenRepository.delete(foundToken.id);
+    await this.subscriptionTokenRepository.delete(validatedToken.id);
+    await this.subscriptionRepository.confirm(validatedToken.subscriptionId);
+    // TODO: create unsubscribe token
+  }
+
+  async unsubscribe(token: string) {
+    const validatedToken = await this.validateToken(
+      token,
+      SubscriptionTokenScope.UNSUBSCRIBE,
+    );
+    // TODO: should a single transaction?
+    await this.subscriptionTokenRepository.delete(validatedToken.id);
+    await this.subscriptionRepository.delete(validatedToken.subscriptionId);
   }
 }

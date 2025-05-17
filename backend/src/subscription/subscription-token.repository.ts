@@ -14,6 +14,7 @@ class SubscriptionTokenRepository implements ISubscriptionTokenRepository {
     @InjectRepository(SubscriptionEntity)
     private readonly subscriptionRepository: Repository<SubscriptionEntity>,
   ) {}
+
   private toDomain(entity: SubscriptionTokenEntity): SubscriptionToken {
     const domainEntity = new SubscriptionToken();
     domainEntity.expiresAt = entity.expiresAt;
