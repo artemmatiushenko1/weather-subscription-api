@@ -11,8 +11,8 @@ const BASE_API_URL = 'http://api.weatherapi.com';
 
 class WeatherApiImpl implements IWeatherApi {
   constructor(
-    private apiKey: string,
-    private httpService: HttpService,
+    private readonly apiKey: string,
+    private readonly httpService: HttpService,
   ) {}
 
   getCurrentForecastForCity = async (

@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 import { WeatherController } from './weather.controller';
 import { WeatherService } from './weather.service';
 import { WeatherApiImpl } from './weather-api-impl/weather-api.impl';
-import { HttpService } from '@nestjs/axios';
+import { HttpModule, HttpService } from '@nestjs/axios';
 
 @Module({
+  imports: [HttpModule.register({})],
   providers: [
     WeatherService,
     {
