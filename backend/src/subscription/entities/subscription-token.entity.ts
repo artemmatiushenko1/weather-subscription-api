@@ -1,10 +1,13 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { SubscriptionTokenScope } from '../domain/subscription-token-scope';
 import { SubscriptionEntity } from './subscription.entity';
 
 @Entity('subscription_tokens')
 class SubscriptionTokenEntity {
-  @Column()
+  @PrimaryGeneratedColumn()
+  id: string;
+
+  @Column({ unique: true })
   token: string;
 
   @Column()

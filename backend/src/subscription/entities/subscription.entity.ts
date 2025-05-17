@@ -7,7 +7,7 @@ class SubscriptionEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
   @Column()
@@ -16,7 +16,7 @@ class SubscriptionEntity {
   @Column({ type: 'enum', enum: Frequency })
   frequency: Frequency;
 
-  @Column()
+  @Column({ default: false })
   confirmed: boolean;
 
   @OneToMany(() => SubscriptionTokenEntity, (token) => token.subscription)
