@@ -9,6 +9,7 @@ interface ISubscriptionTokenRepository {
     subscriptionId: string,
     subscriptionToken: SubscriptionToken,
   ) => Promise<SubscriptionToken>;
+  delete: (tokenId: string) => Promise<boolean>;
 }
 
 export { ISubscriptionTokenRepository };

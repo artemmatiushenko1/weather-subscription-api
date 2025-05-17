@@ -19,6 +19,8 @@ class SubscriptionTokenRepository implements ISubscriptionTokenRepository {
     domainEntity.expiresAt = entity.expiresAt;
     domainEntity.scope = entity.scope;
     domainEntity.token = entity.token;
+    domainEntity.subscriptionId = entity.subscription.id;
+    domainEntity.id = entity.id;
 
     return domainEntity;
   }
@@ -26,6 +28,7 @@ class SubscriptionTokenRepository implements ISubscriptionTokenRepository {
   find = async (token: string): Promise<SubscriptionToken | null> => {
     const entity = await this.subscriptionTokenRepository.findOne({
       where: { token },
+      relations: ['subscription'],
     });
 
     if (!entity) {
@@ -56,8 +59,12 @@ class SubscriptionTokenRepository implements ISubscriptionTokenRepository {
     });
 
     const savedEntity = await this.subscriptionTokenRepository.save(entity);
-
     return this.toDomain(savedEntity);
+  };
+
+  delete = async (tokenId: string) => {
+    const result = await this.subscriptionTokenRepository.delete(tokenId);
+    return !!result.affected;
   };
 }
 

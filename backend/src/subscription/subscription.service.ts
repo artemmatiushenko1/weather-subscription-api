@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Frequency } from './domain/frequency';
 import {
   ISubscriptionRepository,
@@ -35,7 +40,14 @@ export class SubscriptionService {
       await this.subscriptionRepository.get(subscriptionToCreate);
 
     if (existingSubscription) {
-      throw new EmailAlreadySubscribedException();
+      console.log(existingSubscription);
+
+      if (existingSubscription.confirmed) {
+        throw new EmailAlreadySubscribedException();
+      } else {
+        // TODO: invalidate confirmation token if subscription is not confirmed
+        return;
+      }
     }
 
     const createdSubscription =
@@ -53,5 +65,23 @@ export class SubscriptionService {
 
     // TODO: send email
     console.log(`Please confirm you email. Token ${createdToken.token}`);
+  }
+
+  async confirm(token: string) {
+    const foundToken = await this.subscriptionTokenRepository.find(token);
+
+    if (!foundToken) {
+      throw new NotFoundException('Token not found');
+    }
+
+    const isTokenExpired = dayjs(foundToken.expiresAt).isBefore(dayjs());
+
+    if (foundToken.scope !== SubscriptionTokenScope.CONFIRM || isTokenExpired) {
+      throw new BadRequestException('Invalid token');
+    }
+
+    // TODO: should a single transaction?
+    await this.subscriptionRepository.confirm(foundToken.subscriptionId);
+    await this.subscriptionTokenRepository.delete(foundToken.id);
   }
 }

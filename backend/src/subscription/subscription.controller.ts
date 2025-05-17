@@ -1,6 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { SubscribeRequestDto } from './dto/subscribe-request.dto';
+import { ConfirmRequestDto } from './dto/confirm-request.dto';
 
 @Controller('/')
 export class SubscriptionController {
@@ -13,5 +14,10 @@ export class SubscriptionController {
       request.city,
       request.frequency,
     );
+  }
+
+  @Get('confirm/:token')
+  async confirm(@Param() request: ConfirmRequestDto) {
+    return await this.subscriptionService.confirm(request.token);
   }
 }
