@@ -20,6 +20,8 @@ import { SubscriptionTokenScope } from './domain/subscription-token-scope';
 import * as crypto from 'node:crypto';
 import { EmailAlreadySubscribedException } from './exceptions/email-already-subscribed.exception';
 
+const SUBSCRIPTION_CONFIRMATION_TOKEN_VALIDITY_DAYS = 7;
+
 // TODO: create subscription tokens manager
 @Injectable()
 export class SubscriptionService {
@@ -29,6 +31,24 @@ export class SubscriptionService {
     @Inject(SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN)
     private readonly subscriptionTokenRepository: ISubscriptionTokenRepository,
   ) {}
+
+  private async createSubscriptionToken(
+    subscriptionId: string,
+    scope: SubscriptionTokenScope,
+    expiresAt: Date | null,
+  ): Promise<SubscriptionToken> {
+    const tokenToCreate = new SubscriptionToken();
+    tokenToCreate.expiresAt = expiresAt;
+    tokenToCreate.scope = scope;
+    tokenToCreate.token = crypto.randomBytes(32).toString('hex');
+
+    const createdToken = await this.subscriptionTokenRepository.create(
+      subscriptionId,
+      tokenToCreate,
+    );
+
+    return createdToken;
+  }
 
   async subscribe(email: string, city: string, frequency: Frequency) {
     const subscriptionToCreate = new Subscription();
@@ -53,18 +73,16 @@ export class SubscriptionService {
     const createdSubscription =
       await this.subscriptionRepository.create(subscriptionToCreate);
 
-    const confirmationTokenToCreate = new SubscriptionToken();
-    confirmationTokenToCreate.expiresAt = dayjs().add(7, 'day').toDate();
-    confirmationTokenToCreate.scope = SubscriptionTokenScope.CONFIRM;
-    confirmationTokenToCreate.token = crypto.randomBytes(32).toString('hex');
-
-    const createdToken = await this.subscriptionTokenRepository.create(
+    const confirmationToken = await this.createSubscriptionToken(
       createdSubscription.id,
-      confirmationTokenToCreate,
+      SubscriptionTokenScope.CONFIRM,
+      dayjs()
+        .add(SUBSCRIPTION_CONFIRMATION_TOKEN_VALIDITY_DAYS, 'day')
+        .toDate(),
     );
 
     // TODO: send email
-    console.log(`Please confirm you email. Token ${createdToken.token}`);
+    console.log(`Please confirm you email. Token ${confirmationToken.token}`);
   }
 
   private async validateToken(
@@ -94,7 +112,11 @@ export class SubscriptionService {
     // TODO: should a single transaction?
     await this.subscriptionTokenRepository.delete(validatedToken.id);
     await this.subscriptionRepository.confirm(validatedToken.subscriptionId);
-    // TODO: create unsubscribe token
+    await this.createSubscriptionToken(
+      validatedToken.subscriptionId,
+      SubscriptionTokenScope.UNSUBSCRIBE,
+      null,
+    );
   }
 
   async unsubscribe(token: string) {
