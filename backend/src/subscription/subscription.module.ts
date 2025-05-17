@@ -5,14 +5,24 @@ import { SubscriptionRepository } from './subscription.repository';
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SUBSCRIPTION_REPOSITORY_TOKEN } from './interfaces/subscription-repository.interface';
+import { SubscriptionTokenEntity } from './entities/subscription-token.entity';
+import { SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN } from './interfaces/subscription-token-repository.interface';
+import { SubscriptionTokenRepository } from './subscription-token.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SubscriptionEntity])],
+  imports: [
+    TypeOrmModule.forFeature([SubscriptionEntity]),
+    TypeOrmModule.forFeature([SubscriptionTokenEntity]),
+  ],
   providers: [
     SubscriptionService,
     {
       provide: SUBSCRIPTION_REPOSITORY_TOKEN,
       useClass: SubscriptionRepository,
+    },
+    {
+      provide: SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN,
+      useClass: SubscriptionTokenRepository,
     },
   ],
   controllers: [SubscriptionController],

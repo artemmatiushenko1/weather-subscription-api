@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Frequency } from '../domain/frequency';
+import { SubscriptionTokenEntity } from './subscription-token.entity';
 
 @Entity('subscriptions')
 class SubscriptionEntity {
@@ -17,6 +18,9 @@ class SubscriptionEntity {
 
   @Column()
   confirmed: boolean;
+
+  @OneToMany(() => SubscriptionTokenEntity, (token) => token.subscription)
+  tokens: SubscriptionTokenEntity[];
 }
 
 export { SubscriptionEntity };
