@@ -1,13 +1,16 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { IWeatherApi, WEATHER_API_TOKEN } from './weather-api.interface';
-import { GetCurrentWeatherResponse } from './weather-service.types';
+import {
+  IWeatherApi,
+  WEATHER_API_TOKEN,
+} from './interfaces/weather-api.interface';
 import { CityNotFoundException } from './weather-api-impl/city-not-found.exception';
+import { Weather } from './domain/weather';
 
 @Injectable()
 export class WeatherService {
   constructor(@Inject(WEATHER_API_TOKEN) private weatherApi: IWeatherApi) {}
 
-  async getCurrentWeather(city: string): Promise<GetCurrentWeatherResponse> {
+  async getCurrentWeather(city: string): Promise<Weather> {
     try {
       const weatherApiResponse =
         await this.weatherApi.getCurrentForecastForCity(city);
