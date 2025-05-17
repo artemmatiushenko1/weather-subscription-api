@@ -4,12 +4,10 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SubscriptionEntity } from './subscription/entities/subscription.entity';
-import { SubscriptionTokenEntity } from './subscription/entities/subscription-token.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     WeatherModule,
     SubscriptionModule,
     EmailModule,
@@ -22,7 +20,8 @@ import { SubscriptionTokenEntity } from './subscription/entities/subscription-to
       password: process.env.POSTGRES_PASSWORD as unknown as string,
       database: process.env.POSTGRES_DB as unknown as string,
       synchronize: process.env.NODE_ENV === 'dev' ? true : false,
-      entities: [SubscriptionEntity, SubscriptionTokenEntity],
+      entities: [__dirname + './**/*.entity.{js,ts}'],
+      autoLoadEntities: true,
     }),
   ],
 })

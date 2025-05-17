@@ -19,6 +19,7 @@ import { SubscriptionToken } from './domain/subscription-token';
 import { SubscriptionTokenScope } from './domain/subscription-token-scope';
 import * as crypto from 'node:crypto';
 import { EmailAlreadySubscribedException } from './exceptions/email-already-subscribed.exception';
+import { EmailService } from 'src/email/email.service';
 
 const SUBSCRIPTION_CONFIRMATION_TOKEN_VALIDITY_DAYS = 7;
 
@@ -30,6 +31,7 @@ export class SubscriptionService {
     private readonly subscriptionRepository: ISubscriptionRepository,
     @Inject(SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN)
     private readonly subscriptionTokenRepository: ISubscriptionTokenRepository,
+    private readonly emailService: EmailService,
   ) {}
 
   private async createSubscriptionToken(
@@ -60,8 +62,6 @@ export class SubscriptionService {
       await this.subscriptionRepository.get(subscriptionToCreate);
 
     if (existingSubscription) {
-      console.log(existingSubscription);
-
       if (existingSubscription.confirmed) {
         throw new EmailAlreadySubscribedException();
       } else {
@@ -81,8 +81,13 @@ export class SubscriptionService {
         .toDate(),
     );
 
-    // TODO: send email
-    console.log(`Please confirm you email. Token ${confirmationToken.token}`);
+    await this.emailService.sendSubscriptionConfirmationEmail(
+      email,
+      frequency,
+      city,
+      // TODO: build url depending on env
+      `http://localhost:3000/confirm/${confirmationToken.token}`,
+    );
   }
 
   private async validateToken(
@@ -117,6 +122,7 @@ export class SubscriptionService {
       SubscriptionTokenScope.UNSUBSCRIBE,
       null,
     );
+    // TODO: redirect to page on frontend
   }
 
   async unsubscribe(token: string) {
