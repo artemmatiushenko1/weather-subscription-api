@@ -15,11 +15,12 @@ export class WeatherService {
       const weatherApiResponse =
         await this.weatherApi.getCurrentForecastForCity(city);
 
-      return {
-        humidity: weatherApiResponse.humidity,
-        temperature: weatherApiResponse.temperature,
-        description: weatherApiResponse.description,
-      };
+      const weather = new Weather();
+      weather.description = weatherApiResponse.description;
+      weather.humidity = weatherApiResponse.humidity;
+      weather.temperature = weatherApiResponse.humidity;
+
+      return weather;
     } catch (e: unknown) {
       if (e instanceof CityNotFoundException) {
         throw new NotFoundException(e.message);
