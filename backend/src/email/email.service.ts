@@ -23,4 +23,28 @@ export class EmailService {
       },
     });
   }
+
+  async sendWeatherUpdateEmail(
+    recipientEmail: string,
+    frequency: string,
+    city: string,
+    humidity: string,
+    temperature: string,
+    description: string,
+    unsubscribeLink: string,
+  ) {
+    await this.mailerService.sendMail({
+      to: recipientEmail,
+      subject: `🌡️ Your ${frequency} Weather Update`,
+      template: 'weather-update',
+      context: {
+        unsubscribeLink,
+        frequency,
+        city,
+        humidity,
+        temperature,
+        description,
+      },
+    });
+  }
 }
