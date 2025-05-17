@@ -22,9 +22,13 @@ class SubscriptionRepository implements ISubscriptionRepository {
     return domainEntity;
   }
 
-  getByEmail = async (email: string): Promise<Subscription | null> => {
+  get = async (subscription: Subscription): Promise<Subscription | null> => {
     const entity = await this.subscriptionRepository.findOne({
-      where: { email },
+      where: {
+        email: subscription.email,
+        frequency: subscription.frequency,
+        city: subscription.city,
+      },
     });
 
     if (!entity) {

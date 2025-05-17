@@ -13,6 +13,7 @@ import * as dayjs from 'dayjs';
 import { SubscriptionToken } from './domain/subscription-token';
 import { SubscriptionTokenScope } from './domain/subscription-token-scope';
 import * as crypto from 'node:crypto';
+import { EmailAlreadySubscribedException } from './exceptions/email-already-subscribed.exception';
 
 // TODO: create subscription tokens manager
 @Injectable()
@@ -26,9 +27,16 @@ export class SubscriptionService {
 
   async subscribe(email: string, city: string, frequency: Frequency) {
     const subscriptionToCreate = new Subscription();
-    subscriptionToCreate.city = city;
+    subscriptionToCreate.city = city.trim().toLowerCase(); // TODO: can transform be moved to dto?
     subscriptionToCreate.frequency = frequency;
-    subscriptionToCreate.email = email;
+    subscriptionToCreate.email = email.trim().toLowerCase();
+
+    const existingSubscription =
+      await this.subscriptionRepository.get(subscriptionToCreate);
+
+    if (existingSubscription) {
+      throw new EmailAlreadySubscribedException();
+    }
 
     const createdSubscription =
       await this.subscriptionRepository.create(subscriptionToCreate);
