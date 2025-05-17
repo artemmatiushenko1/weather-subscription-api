@@ -109,7 +109,7 @@ export class SubscriptionService {
       token,
       SubscriptionTokenScope.CONFIRM,
     );
-    // TODO: should a single transaction?
+    // TODO: should a single transaction? https://github.com/brocoders/nestjs-boilerplate/issues/1892
     await this.subscriptionTokenRepository.delete(validatedToken.id);
     await this.subscriptionRepository.confirm(validatedToken.subscriptionId);
     await this.createSubscriptionToken(
