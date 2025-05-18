@@ -65,7 +65,7 @@ export class SubscriptionService {
       if (existingSubscription.confirmed) {
         throw new EmailAlreadySubscribedException();
       } else {
-        // TODO: invalidate confirmation token if subscription is not confirmed
+        // TODO: resend confirmation email!
         return;
       }
     }
