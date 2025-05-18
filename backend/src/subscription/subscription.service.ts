@@ -32,7 +32,8 @@ export class SubscriptionService {
   ) {}
 
   private buildConfirmationLink(token: string): string {
-    return `${this.appConfigService.appConfig.host}/confirm/${token}`;
+    const { host, apiPrefix } = this.appConfigService.appConfig;
+    return `${host}${apiPrefix}/confirm/${token}`;
   }
 
   private async sendConfirmationEmail(subscription: Subscription) {

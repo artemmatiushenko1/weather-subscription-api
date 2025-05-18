@@ -18,7 +18,8 @@ export class WeatherSchedulerService {
   ) {}
 
   private buildUnscubscribeLink(token: string): string {
-    return `${this.appConfigService.appConfig.host}/unsubscribe/${token}`;
+    const { host, apiPrefix } = this.appConfigService.appConfig;
+    return `${host}${apiPrefix}/unsubscribe/${token}`;
   }
 
   async sendUpdate(frequency: Frequency) {
