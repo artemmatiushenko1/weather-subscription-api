@@ -13,7 +13,7 @@ const schema = z.object({
 
 export type DatabaseConfig = z.infer<typeof schema>;
 
-export default registerAs('database', () => {
+export const validateDatabaseConfig = () => {
   const envs = schema.parse({
     postgres: {
       username: process.env.POSTGRES_USER,
@@ -25,4 +25,6 @@ export default registerAs('database', () => {
   });
 
   return envs;
-});
+};
+
+export default registerAs('database', validateDatabaseConfig);

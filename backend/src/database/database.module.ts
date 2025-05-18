@@ -19,8 +19,11 @@ import { Environment } from 'src/app/app.config';
           password: postgresConfig.password,
           database: postgresConfig.database,
           synchronize: appConfig.env === Environment.DEV ? true : false,
-          entities: [__dirname + './**/*.entity.{js,ts}'],
           autoLoadEntities: true,
+          migrationsRun: true,
+          entities: ['dist/**/*.entity{.ts,.js}'],
+          migrations: ['dist/database/migrations/*{.ts,.js}'],
+          logging: ['info', 'migration'],
         };
       },
     }),
