@@ -1,19 +1,68 @@
-<h2>Welcome, {{email}}!</h2>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>Confirm Your {{frequency}} Weather Update</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        padding: 20px;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #43367c;
+        font-weight: 600;
+      }
+      h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+      .confirmButton {
+        background-color: #43367c;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <h1>Confirm your weather subscription</h1>
+      </div>
 
-<p>You've requested to receive
-  {{frequency}}
-  weather updates at
-  {{city}}.</p>
+      <div style='text-align: left;'>
+        <h2>Welcome, {{email}}! 👋</h2>
 
-<p>To start getting personalized forecasts, please confirm your subscription by
-  clicking the link below:</p>
+        <p>You've requested to receive
+          {{frequency}}
+          weather updates at
+          <span style='text-transform:capitalize;'>{{city}}</span>.</p>
 
-<p>
-  <a
-    href='{{confirmationLink}}'
-    target='_blank'
-    style='background-color:#007bff; color:white; padding:10px 20px; text-decoration:none; border-radius:4px;'
-  >
-    Confirm My Subscription
-  </a>
-</p>
+        <p>To start getting personalized forecasts, please confirm your
+          subscription by clicking the button below:</p>
+
+        <p style='text-align: center;margin-top:30px;'>
+          <a href='{{confirmationLink}}' target='_blank' class='confirmButton'>
+            Confirm My Subscription
+          </a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
