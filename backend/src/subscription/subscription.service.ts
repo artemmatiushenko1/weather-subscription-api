@@ -20,6 +20,7 @@ import { SubscriptionTokenScope } from './domain/subscription-token-scope';
 import * as crypto from 'node:crypto';
 import { EmailAlreadySubscribedException } from './exceptions/email-already-subscribed.exception';
 import { EmailService } from 'src/email/email.service';
+import { AppConfigService } from 'src/app-config/app-config.service';
 
 const SUBSCRIPTION_CONFIRMATION_TOKEN_VALIDITY_DAYS = 7;
 
@@ -32,7 +33,12 @@ export class SubscriptionService {
     @Inject(SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN)
     private readonly subscriptionTokenRepository: ISubscriptionTokenRepository,
     private readonly emailService: EmailService,
+    private readonly appConfigService: AppConfigService,
   ) {}
+
+  private buildConfirmationLink(token: string): string {
+    return `${this.appConfigService.appConfig.host}/confirm/${token}`;
+  }
 
   private async createSubscriptionToken(
     subscriptionId: string,
@@ -85,8 +91,7 @@ export class SubscriptionService {
       email,
       frequency,
       city,
-      // TODO: build url depending on env
-      `http://localhost:3000/confirm/${confirmationToken.token}`,
+      this.buildConfirmationLink(confirmationToken.token),
     );
   }
 

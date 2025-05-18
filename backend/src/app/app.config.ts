@@ -10,6 +10,7 @@ export enum Environment {
 const schema = z.object({
   env: z.enum([Environment.DEV, Environment.PROD, Environment.TEST]),
   port: z.number().default(3000),
+  host: z.string().url(),
 });
 
 export type AppConfig = z.infer<typeof schema>;
@@ -18,6 +19,7 @@ export default registerAs('app', () => {
   const envs = schema.parse({
     env: process.env.NODE_ENV,
     port: parseInt(process.env.SERVER_PORT ?? ''),
+    host: process.env.SERVER_HOST,
   });
 
   return envs;

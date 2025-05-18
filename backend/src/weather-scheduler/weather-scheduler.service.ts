@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { AppConfigService } from 'src/app-config/app-config.service';
 import { EmailService } from 'src/email/email.service';
 import { Frequency } from 'src/subscription/domain/frequency';
 import { SubscriptionService } from 'src/subscription/subscription.service';
@@ -13,7 +14,12 @@ export class WeatherSchedulerService {
     private readonly subscriptionService: SubscriptionService,
     private readonly weatherService: WeatherService,
     private readonly emailService: EmailService,
+    private readonly appConfigService: AppConfigService,
   ) {}
+
+  private buildUnscubscribeLink(token: string): string {
+    return `${this.appConfigService.appConfig.host}/unsubscribe/${token}`;
+  }
 
   async sendUpdate(frequency: Frequency) {
     const subscriptions =
@@ -28,15 +34,12 @@ export class WeatherSchedulerService {
           const unsubscribeToken =
             await this.subscriptionService.getUnsubscribeToken(subscription.id);
 
-          // console.log({ unsubscribeToken });
-
           await this.emailService.sendWeatherUpdateEmail(
             subscription.email,
             subscription.frequency,
             subscription.city,
             weather,
-            // TODO: build correct link
-            `http://localhost:3000/unsubscribe/${unsubscribeToken.token}`,
+            this.buildUnscubscribeLink(unsubscribeToken.token),
           );
           this.logger.log(
             `Sent ${subscription.frequency} update for subscription ${subscription.id}`,
@@ -45,6 +48,7 @@ export class WeatherSchedulerService {
           if (e instanceof Error) {
             this.logger.error(
               `Failed to send ${subscription.frequency} update for subscription ${subscription.id}.`,
+              e,
             );
           }
         }

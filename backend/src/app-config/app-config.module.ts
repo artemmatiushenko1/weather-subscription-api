@@ -12,6 +12,7 @@ import loadAppConfig from '../app/app.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      expandVariables: true,
       load: [
         loadEmailConfig,
         loadWeatherConfig,
