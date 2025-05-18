@@ -48,7 +48,6 @@ class SubscriptionTokenRepository implements ISubscriptionTokenRepository {
       where: { id: subscriptionId },
     });
 
-    // TODO: create entity not found exception
     if (!subscription) {
       throw new Error(`Subscription with ID ${subscriptionId} not found`);
     }
