@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { SubscribeRequestDto } from './dto/subscribe-request.dto';
 import { ConfirmRequestDto } from './dto/confirm-request.dto';
@@ -8,6 +16,7 @@ export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
   @Post('subscribe')
+  @HttpCode(HttpStatus.OK)
   async subscribe(@Body() request: SubscribeRequestDto) {
     return await this.subscriptionService.subscribe(
       request.email,
