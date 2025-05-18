@@ -25,6 +25,12 @@ export class WeatherSchedulerService {
     const subscriptions =
       await this.subscriptionService.getSubscriptionsByFrequency(frequency);
 
+    this.logger.log(
+      `Found ${subscriptions.length} ${frequency} subscriptions.`,
+    );
+
+    if (subscriptions.length <= 0) return;
+
     await Promise.allSettled(
       subscriptions.map(async (subscription) => {
         try {
