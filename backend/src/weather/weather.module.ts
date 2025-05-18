@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { WeatherController } from './weather.controller';
 import { WeatherService } from './weather.service';
 import { WeatherApiImpl } from './weather-api-impl/weather-api.impl';
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
 import { AppConfigService } from 'src/app-config/app-config.service';
 
 @Module({
@@ -12,15 +12,12 @@ import { AppConfigService } from 'src/app-config/app-config.service';
     WeatherService,
     {
       provide: WEATHER_API_TOKEN,
-      useFactory: (
-        httpService: HttpService,
-        appConfigService: AppConfigService,
-      ) => {
+      useFactory: (appConfigService: AppConfigService) => {
         const weatherConfig = appConfigService.weatherConfig;
         const apiKey = weatherConfig.weatherApiKey;
-        return new WeatherApiImpl(apiKey, httpService);
+        return new WeatherApiImpl(apiKey);
       },
-      inject: [HttpService, AppConfigService],
+      inject: [AppConfigService],
     },
   ],
   controllers: [WeatherController],

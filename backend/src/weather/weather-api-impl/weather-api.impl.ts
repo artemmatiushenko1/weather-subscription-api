@@ -1,35 +1,27 @@
 import { IWeatherApi } from '../interfaces/weather-api.interface';
 import { CityNotFoundException } from './exceptions/city-not-found.exception';
-import {
-  WeatherApiCurrentErrorResponse,
-  WeatherApiCurrentResponse,
-} from './types';
 import { WeatherApiException } from './exceptions/weather-api.exception';
-import { HttpService } from '@nestjs/axios';
 import { Weather } from '../domain/weather';
+import {
+  weatherApiCurrentErrorSchema,
+  weatherApiCurrentSchema,
+} from './weather-api.validation';
 
 const BASE_API_URL = 'http://api.weatherapi.com';
 
-// TODO: move this to separate module
 class WeatherApiImpl implements IWeatherApi {
-  constructor(
-    private readonly apiKey: string,
-    private readonly httpService: HttpService,
-  ) {}
+  constructor(private readonly apiKey: string) {}
 
-  getCurrentForecastForCity = async (city: string): Promise<Weather> => {
+  current = async (city: string): Promise<Weather> => {
     const url = new URL('/v1/current.json', BASE_API_URL);
     url.searchParams.append('key', this.apiKey);
     url.searchParams.append('q', city);
     url.searchParams.append('aqi', 'no');
 
-    // TODO: use HttpService from nest
     const response = await fetch(url);
 
     if (!response.ok) {
-      const data =
-        (await response.json()) as unknown as WeatherApiCurrentErrorResponse;
-
+      const data = weatherApiCurrentErrorSchema.parse(await response.json());
       if (data.error.code === CityNotFoundException.CODE) {
         throw new CityNotFoundException(city);
       } else {
@@ -37,15 +29,13 @@ class WeatherApiImpl implements IWeatherApi {
       }
     }
 
-    // TODO: use json validation schema
-    const data =
-      (await response.json()) as unknown as WeatherApiCurrentResponse;
+    const data = weatherApiCurrentSchema.parse(await response.json());
+    const weather = new Weather();
+    weather.description = data.current.condition.text;
+    weather.humidity = data.current.humidity;
+    weather.temperature = data.current.temp_c;
 
-    return {
-      humidity: data.current.humidity,
-      temperature: data.current.humidity,
-      description: data.current.condition.text,
-    };
+    return weather;
   };
 }
 

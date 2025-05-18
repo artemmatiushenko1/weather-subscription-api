@@ -12,14 +12,7 @@ export class WeatherService {
 
   async getCurrentWeather(city: string): Promise<Weather> {
     try {
-      const weatherApiResponse =
-        await this.weatherApi.getCurrentForecastForCity(city);
-
-      const weather = new Weather();
-      weather.description = weatherApiResponse.description;
-      weather.humidity = weatherApiResponse.humidity;
-      weather.temperature = weatherApiResponse.temperature;
-
+      const weather = await this.weatherApi.current(city);
       return weather;
     } catch (e: unknown) {
       if (e instanceof CityNotFoundException) {
