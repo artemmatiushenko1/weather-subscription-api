@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { WeatherModule } from './weather/weather.module';
-import { SubscriptionModule } from './subscription/subscription.module';
-import { EmailModule } from './email/email.module';
+import { WeatherModule } from '../weather/weather.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
+import { EmailModule } from '../email/email.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WeatherSchedulerModule } from './weather-scheduler/weather-scheduler.module';
-import { AppConfigModule } from './app-config/app-config.module';
+import { WeatherSchedulerModule } from '../weather-scheduler/weather-scheduler.module';
+import { AppConfigModule } from '../app-config/app-config.module';
 
 @Module({
   imports: [
@@ -26,6 +26,7 @@ import { AppConfigModule } from './app-config/app-config.module';
     }),
     WeatherSchedulerModule,
     AppConfigModule,
+    AppModule,
   ],
 })
 export class AppModule {}

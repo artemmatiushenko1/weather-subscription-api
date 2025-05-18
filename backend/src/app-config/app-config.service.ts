@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AppConfig } from 'src/app.config';
+import { AppConfig } from 'src/app/app.config';
 import { DatabaseConfig } from 'src/database.config';
 import { EmailConfig } from 'src/email/email.config';
 import { WeatherConfig } from 'src/weather/weather.config';
