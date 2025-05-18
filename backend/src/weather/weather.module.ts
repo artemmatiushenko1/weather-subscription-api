@@ -12,9 +12,12 @@ import { AppConfigService } from 'src/app-config/app-config.service';
     WeatherService,
     {
       provide: WEATHER_API_TOKEN,
-      useFactory: (httpService: HttpService) => {
-        // TODO: add config service, use convict to validate envs
-        const apiKey = process.env.WEATHER_API_KEY as string;
+      useFactory: (
+        httpService: HttpService,
+        appConfigService: AppConfigService,
+      ) => {
+        const weatherConfig = appConfigService.weatherConfig;
+        const apiKey = weatherConfig.weatherApiKey;
         return new WeatherApiImpl(apiKey, httpService);
       },
       inject: [HttpService, AppConfigService],
