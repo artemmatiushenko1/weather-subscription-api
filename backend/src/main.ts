@@ -9,7 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const appConfig = app.get(AppConfigService).appConfig;
-  app.setGlobalPrefix(appConfig.apiPrefix);
+  // app.setGlobalPrefix(appConfig.apiPrefix);
 
   setupSwagger(app);
 
