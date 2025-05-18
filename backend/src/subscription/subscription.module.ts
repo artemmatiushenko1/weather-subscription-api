@@ -9,6 +9,7 @@ import { SubscriptionTokenEntity } from './entities/subscription-token.entity';
 import { SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN } from './interfaces/subscription-token-repository.interface';
 import { SubscriptionTokenRepository } from './subscription-token.repository';
 import { EmailModule } from 'src/email/email.module';
+import { SubscriptionTokenManager } from './subscription-token-manager';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { EmailModule } from 'src/email/email.module';
       provide: SUBSCRIPTION_TOKEN_REPOSITORY_TOKEN,
       useClass: SubscriptionTokenRepository,
     },
+    SubscriptionTokenManager,
   ],
   controllers: [SubscriptionController],
   exports: [SubscriptionService],
