@@ -35,6 +35,23 @@ export class SubscriptionService {
     return `${this.appConfigService.appConfig.host}/confirm/${token}`;
   }
 
+  private async sendConfirmationEmail(subscription: Subscription) {
+    const confirmationToken = await this.tokenManager.issue(
+      subscription.id,
+      SubscriptionTokenScope.CONFIRM,
+      dayjs()
+        .add(SUBSCRIPTION_CONFIRMATION_TOKEN_VALIDITY_DAYS, 'day')
+        .toDate(),
+    );
+
+    await this.emailService.sendSubscriptionConfirmationEmail(
+      subscription.email,
+      subscription.frequency,
+      subscription.city,
+      this.buildConfirmationLink(confirmationToken.token),
+    );
+  }
+
   async subscribe(email: string, city: string, frequency: Frequency) {
     const subscriptionToCreate = new Subscription();
     subscriptionToCreate.city = city;
@@ -48,28 +65,14 @@ export class SubscriptionService {
       if (existingSubscription.confirmed) {
         throw new EmailAlreadySubscribedException();
       } else {
-        // TODO: resend confirmation email!
-        return;
+        return await this.sendConfirmationEmail(existingSubscription);
       }
     }
 
     const createdSubscription =
       await this.subscriptionRepository.create(subscriptionToCreate);
 
-    const confirmationToken = await this.tokenManager.issue(
-      createdSubscription.id,
-      SubscriptionTokenScope.CONFIRM,
-      dayjs()
-        .add(SUBSCRIPTION_CONFIRMATION_TOKEN_VALIDITY_DAYS, 'day')
-        .toDate(),
-    );
-
-    await this.emailService.sendSubscriptionConfirmationEmail(
-      email,
-      frequency,
-      city,
-      this.buildConfirmationLink(confirmationToken.token),
-    );
+    await this.sendConfirmationEmail(createdSubscription);
   }
 
   async confirm(token: string) {
@@ -77,15 +80,21 @@ export class SubscriptionService {
       token,
       SubscriptionTokenScope.CONFIRM,
     );
-    // TODO: should a single transaction? https://github.com/brocoders/nestjs-boilerplate/issues/1892
+    // TODO: should run in a single transaction? https://github.com/brocoders/nestjs-boilerplate/issues/1892
     await this.tokenManager.invalidate(validatedToken.id);
     await this.subscriptionRepository.confirm(validatedToken.subscriptionId);
-    await this.tokenManager.issue(
-      validatedToken.subscriptionId,
-      SubscriptionTokenScope.UNSUBSCRIBE,
-      null,
-    );
-    // TODO: redirect to page on frontend
+
+    try {
+      await this.getUnsubscribeToken(validatedToken.subscriptionId);
+    } catch (e: unknown) {
+      if (e instanceof NotFoundException) return;
+
+      await this.tokenManager.issue(
+        validatedToken.subscriptionId,
+        SubscriptionTokenScope.UNSUBSCRIBE,
+        null,
+      );
+    }
   }
 
   async unsubscribe(token: string) {
@@ -93,7 +102,7 @@ export class SubscriptionService {
       token,
       SubscriptionTokenScope.UNSUBSCRIBE,
     );
-    // TODO: should a single transaction?
+    // TODO: should run in a single transaction?
     await this.tokenManager.invalidate(validatedToken.id);
     await this.subscriptionRepository.delete(validatedToken.subscriptionId);
   }
