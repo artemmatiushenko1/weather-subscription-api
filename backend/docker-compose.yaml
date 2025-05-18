@@ -13,6 +13,24 @@ services:
       - '${POSTGRES_PORT}:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - network
+
+  api:
+    build: .
+    container_name: api
+    env_file:
+      - .env
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    depends_on:
+      - postgres
+    networks:
+      - network
 
 volumes:
   postgres_data:
+
+networks:
+  network:
+    driver: bridge
