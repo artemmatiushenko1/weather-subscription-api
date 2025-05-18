@@ -87,13 +87,15 @@ export class SubscriptionService {
     try {
       await this.getUnsubscribeToken(validatedToken.subscriptionId);
     } catch (e: unknown) {
-      if (e instanceof NotFoundException) return;
-
-      await this.tokenManager.issue(
-        validatedToken.subscriptionId,
-        SubscriptionTokenScope.UNSUBSCRIBE,
-        null,
-      );
+      if (e instanceof NotFoundException) {
+        await this.tokenManager.issue(
+          validatedToken.subscriptionId,
+          SubscriptionTokenScope.UNSUBSCRIBE,
+          null,
+        );
+      } else {
+        throw e;
+      }
     }
   }
 
