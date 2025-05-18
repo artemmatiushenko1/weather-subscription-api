@@ -60,9 +60,9 @@ export class SubscriptionService {
 
   async subscribe(email: string, city: string, frequency: Frequency) {
     const subscriptionToCreate = new Subscription();
-    subscriptionToCreate.city = city.trim().toLowerCase(); // TODO: can transform be moved to dto?
+    subscriptionToCreate.city = city;
     subscriptionToCreate.frequency = frequency;
-    subscriptionToCreate.email = email.trim().toLowerCase();
+    subscriptionToCreate.email = email;
 
     const existingSubscription =
       await this.subscriptionRepository.get(subscriptionToCreate);
