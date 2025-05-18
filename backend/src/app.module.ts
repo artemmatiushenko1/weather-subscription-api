@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { WeatherModule } from './weather/weather.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { EmailModule } from './email/email.module';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WeatherSchedulerModule } from './weather-scheduler/weather-scheduler.module';
+import { AppConfigModule } from './app-config/app-config.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    AppConfigModule,
     WeatherModule,
     SubscriptionModule,
     EmailModule,
@@ -25,6 +25,7 @@ import { WeatherSchedulerModule } from './weather-scheduler/weather-scheduler.mo
       autoLoadEntities: true,
     }),
     WeatherSchedulerModule,
+    AppConfigModule,
   ],
 })
 export class AppModule {}
