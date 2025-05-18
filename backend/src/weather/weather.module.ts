@@ -4,6 +4,7 @@ import { WeatherController } from './weather.controller';
 import { WeatherService } from './weather.service';
 import { WeatherApiImpl } from './weather-api-impl/weather-api.impl';
 import { HttpModule, HttpService } from '@nestjs/axios';
+import { AppConfigService } from 'src/app-config/app-config.service';
 
 @Module({
   imports: [HttpModule.register({})],
@@ -16,7 +17,7 @@ import { HttpModule, HttpService } from '@nestjs/axios';
         const apiKey = process.env.WEATHER_API_KEY as string;
         return new WeatherApiImpl(apiKey, httpService);
       },
-      inject: [HttpService],
+      inject: [HttpService, AppConfigService],
     },
   ],
   controllers: [WeatherController],

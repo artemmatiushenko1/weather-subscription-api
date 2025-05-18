@@ -5,6 +5,8 @@ import { EmailModule } from '../email/email.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WeatherSchedulerModule } from '../weather-scheduler/weather-scheduler.module';
 import { AppConfigModule } from '../app-config/app-config.module';
+import { AppConfigService } from 'src/app-config/app-config.service';
+import { Environment } from './app.config';
 
 @Module({
   imports: [
@@ -12,21 +14,26 @@ import { AppConfigModule } from '../app-config/app-config.module';
     WeatherModule,
     SubscriptionModule,
     EmailModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      // TODO: use config service
-      host: process.env.POSTGRES_HOST as unknown as string,
-      port: process.env.POSTGRES_PORT as unknown as number,
-      username: process.env.POSTGRES_USER as unknown as string,
-      password: process.env.POSTGRES_PASSWORD as unknown as string,
-      database: process.env.POSTGRES_DB as unknown as string,
-      synchronize: process.env.NODE_ENV === 'dev' ? true : false,
-      entities: [__dirname + './**/*.entity.{js,ts}'],
-      autoLoadEntities: true,
-    }),
     WeatherSchedulerModule,
-    AppConfigModule,
-    AppModule,
+    TypeOrmModule.forRootAsync({
+      inject: [AppConfigService],
+      useFactory: (appConfigService: AppConfigService) => {
+        const postgresConfig = appConfigService.databaseConfig.postgres;
+        const appConfig = appConfigService.appConfig;
+
+        return {
+          type: 'postgres',
+          host: postgresConfig.host,
+          port: postgresConfig.port,
+          username: postgresConfig.username,
+          password: postgresConfig.password,
+          database: postgresConfig.database,
+          synchronize: appConfig.env === Environment.DEV ? true : false,
+          entities: [__dirname + './**/*.entity.{js,ts}'],
+          autoLoadEntities: true,
+        };
+      },
+    }),
   ],
 })
 export class AppModule {}

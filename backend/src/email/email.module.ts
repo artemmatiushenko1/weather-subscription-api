@@ -2,18 +2,21 @@ import { Module } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { AppConfigService } from 'src/app-config/app-config.service';
 
-// TODO: use config service
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      useFactory: () => {
+      inject: [AppConfigService],
+      useFactory: (appConfigService: AppConfigService) => {
+        const emailConfig = appConfigService.emailConfig;
+
         return {
           transport: {
             service: 'gmail',
             auth: {
-              user: process.env.NODEMAILER_USER as unknown as string,
-              pass: process.env.NODEMAILER_PASS as unknown as string,
+              user: emailConfig.nodemailer.user,
+              pass: emailConfig.nodemailer.password,
             },
           },
           template: {
