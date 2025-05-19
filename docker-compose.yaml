@@ -17,10 +17,10 @@ services:
       - network
 
   api:
-    build: ./backend
+    build: ./api
     container_name: api
     env_file:
-      - ./backend/.env
+      - ./api/.env
     ports:
       - '3000:3000'
     depends_on:
@@ -38,12 +38,13 @@ services:
     networks:
       - network
 
-  nginx:
+  proxy:
     image: nginx:alpine
+    container_name: proxy
     ports:
-      - '80:80'
+      - '8080:80'
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - api
       - frontend

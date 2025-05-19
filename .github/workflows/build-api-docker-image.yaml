@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - 'backend/**'
+      - 'api/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./api
 
     steps:
       - name: Checkout code
@@ -44,7 +44,7 @@ jobs:
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./backend
-          file: ./backend/Dockerfile
+          context: ./api
+          file: ./api/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/weather-subscription-api:latest
