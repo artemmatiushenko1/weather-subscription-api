@@ -4,15 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'api/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./api
 
     steps:
       - name: Checkout code
@@ -21,15 +16,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
 
-      - name: Install dependencies
+      - name: Install frontend dependencies and build
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Install api dependencies
+        working-directory: api
         run: npm install
 
-      - name: Build project
+      - name: Build api
+        working-directory: api
         run: npm run build
 
-      - name: Lint
+      - name: Lint api
+        working-directory: api
         run: npm run lint
 
       - name: Set up Docker Buildx
@@ -41,7 +45,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Docker image
+      - name: Build and Push api Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./api
