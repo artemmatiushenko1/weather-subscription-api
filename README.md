@@ -108,13 +108,18 @@ cat .env.prod > .env
 
 Note that you need to provide your own access token for [www.weatherapi.com](www.weatherapi.com) and gmail app credentials, see [here](https://nodemailer.com/usage/using-gmail/#apppassword-requires-2step-verification).
 
-3. Start the system using docker-compose.
+3. Build frontend and start the system using docker-compose.
 
 ```sh
+cd frontend
+npm run build
+
+# in root repo dir
+docker-compose build
 docker-compose up
 ```
 
-Now you can access the app at [htpp://localhost:3000](htpp://localhost:3000) in your browser.
+Now you can access the app at [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## User flows
 
@@ -171,4 +176,4 @@ The following user flows describe how users interact with the Weather Subscripti
 
 ## Deployment
 
-The app is deployed at [Railway](https://railway.com/) and available at: https://weather-subscription-api-production.up.railway.app/.
+The app is deployed at [Railway](https://railway.com/) and available through: https://weather-subscription-api-production.up.railway.app/.
