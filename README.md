@@ -189,4 +189,6 @@ The following user flows describe how users interact with the Weather Subscripti
 
 ## Deployment
 
-The app is deployed at [Railway](https://railway.com/) and available through: https://weather-subscription-api-production.up.railway.app/. P.S. I hope free credits will be enough, so the deployment doesn't die prematurely...
+The app is deployed at [Railway](https://railway.com/) using Docker image built by GitHub Actions workflow.
+
+Deployment is available through: https://weather-subscription-api-production.up.railway.app/. P.S. I hope free credits will be enough, so the deployment doesn't die prematurely...
