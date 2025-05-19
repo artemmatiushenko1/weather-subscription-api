@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-env
-
 echo "NODE_ENV=${NODE_ENV}
 API_PREFIX=${API_PREFIX}
 SERVER_PORT=${SERVER_PORT}
