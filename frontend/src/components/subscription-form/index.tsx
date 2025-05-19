@@ -17,17 +17,14 @@ const SubscriptionForm = () => {
 
     if (!email || !frequency || !city) return;
 
-    const response = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/subscribe`,
-      {
-        method: 'POST',
-        body: new URLSearchParams({
-          email: email.toString().trim().toLowerCase(),
-          city: city.toString().trim().toLowerCase(),
-          frequency: frequency.toString(),
-        }),
-      }
-    );
+    const response = await fetch('/api/subscribe', {
+      method: 'POST',
+      body: new URLSearchParams({
+        email: email.toString().trim().toLowerCase(),
+        city: city.toString().trim().toLowerCase(),
+        frequency: frequency.toString(),
+      }),
+    });
 
     if (response.ok) {
       window.alert(
