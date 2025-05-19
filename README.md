@@ -108,13 +108,26 @@ cat .env.prod > .env
 
 Note that you need to provide your own access token for [www.weatherapi.com](www.weatherapi.com) and gmail app credentials, see [here](https://nodemailer.com/usage/using-gmail/#apppassword-requires-2step-verification).
 
-3. Build frontend and start the system using docker-compose.
+3. Install dependencies in both api and frontend.
+
+```sh
+cd api
+npm i
+
+cd frontend
+npm i
+```
+
+4. Build frontend.
 
 ```sh
 cd frontend
 npm run build
+```
 
-# in root repo dir
+3. Start the system using docker-compose from the root dir.
+
+```sh
 docker-compose build
 docker-compose up
 ```
