@@ -87,7 +87,7 @@ The API documentation is created using [Swagger](https://swagger.io/). It provid
 
 You can access the Swagger UI for the API documentation at:
 
-- **Local Environment**: [http://localhost:3000/api](http://localhost:3000/api)
+- **Local Environment**: [http://localhost:3000/api/docs](http://localhost:3000/api/docs)
 - **Production Environment**: [https://weather-subscription-api-production.up.railway.app/api/docs](https://weather-subscription-api-production.up.railway.app/api/docs)
 
 ## How to Run locally
@@ -176,4 +176,4 @@ The following user flows describe how users interact with the Weather Subscripti
 
 ## Deployment
 
-The app is deployed at [Railway](https://railway.com/) and available through: https://weather-subscription-api-production.up.railway.app/.
+The app is deployed at [Railway](https://railway.com/) and available through: https://weather-subscription-api-production.up.railway.app/. P.S. I hope free credits will be enough, so the deployment doesn't die prematurely...
