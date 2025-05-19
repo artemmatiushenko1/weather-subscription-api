@@ -2,6 +2,8 @@
 
 App for subscribing to weather updates via email.
 
+![preview](./preview.png)
+
 ## Domain
 
 The application allows users to subscribe to daily or hourly weather updates for their city. It aims to provide timely and accurate weather information directly to users' inboxes, enhancing their ability to plan their day or week effectively.
