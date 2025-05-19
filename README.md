@@ -28,6 +28,7 @@ The system consists of the following components:
 4. [PostgreSQL](https://www.postgresql.org/) — Relational database for storing subscription data.
 5. [Docker](https://www.docker.com/) — Containerization platform for deployment.
 6. [Nodemailer](https://nodemailer.com/about/) — Library for sending emails. Used with **Gmail** as email service provider.
+7. [TypeORM](https://typeorm.io/) — ORM (Object-Relational Mapping) library for managing database interactions.
 
 ### Project Structure
 
